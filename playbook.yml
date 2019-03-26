@@ -1,0 +1,11 @@
+---
+- name: run the playbook tasks on the localhost
+  hosts: 127.0.0.1
+  connection: local
+  become: yes
+  tasks:
+  
+  - git:
+    repo: 'https://github.com/flexiooss/hotballoon-shed.git'
+    dest: /home/hotballoon-shed
+    version: master
