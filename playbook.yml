@@ -1,12 +1,55 @@
 ---
-- name: run the playbook tasks on the localhost
+
+- name: Run the playbook tasks on the localhost
   hosts: localhost
   connection: local
   become: yes
+  become_user: root
+
+  vars:
+    repo_url: 'https://github.com/flexiooss/hotballoon-shed.git'
+    repo_version: develop
+    install_dir: /home/hotballoon-shed
+
   tasks:
-  
-   - name: ensure have last hotballoon-shed master version
-     git:
-       repo: 'https://github.com/flexiooss/hotballoon-shed.git'
-       dest: /home/hotballoon-shed
-       version: master
+    - name: Install latest version of "git"
+      apt:
+        name: git
+        state: latest
+
+    - name: Install "python 3.7"
+      apt:
+        name: python3.7
+        state: present
+
+    - name: Install latest version of "nodejs"
+      apt:
+        name: nodejs
+        state: latest
+
+    - name: Ensure have last hotballoon-shed master version
+      git:
+        repo: "{{repo_url}}"
+        dest: "{{install_dir}}"
+        version: "{{repo_version}}"
+
+    - name: Activate venv for python3.7
+      command: bash "{{install_dir}}"/venv.sh
+
+    - name: Ensure have hshed into /usr/local/bin/
+      template:
+        src: ./bin/hshed.j2
+        dest: /usr/local/bin/hshed
+        owner: root
+        group: root
+        mode: 751
+
+    - name: Ensure hotballoon-shed is self-installed
+      command: sudo bash "{{install_dir}}"/hshed.sh self-install
+      become: yes
+      become_user: root
+      register: self_install
+
+    - debug: msg="{{ self_install.stdout }}"
+    - debug: msg="{{ self_install.stderr }}"
+
