@@ -46,8 +46,6 @@
 
     - name: Ensure hotballoon-shed is self-installed
       command: sudo bash "{{install_dir}}"/hshed.sh self-install
-      become: yes
-      become_user: root
       register: self_install
 
     - debug: msg="{{ self_install.stdout }}"
