@@ -48,8 +48,8 @@
 
     - name: Ensure hotballoon-shed is self-installed
       shell: bash "{{install_dir}}"/hotballoon-shed.sh self-install
-#      register: self_install
+      register: self_install
 
-#    - debug: msg="{{ self_install.stdout }}"
-#    - debug: msg="{{ self_install.stderr }}"
+    - debug: msg="{{ self_install.stdout }}"
+    - debug: msg="{{ self_install.stderr }}"
 
