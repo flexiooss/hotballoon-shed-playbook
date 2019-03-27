@@ -1,33 +1,36 @@
 ---
 
-- name: Run the playbook tasks on the localhost
-  hosts: localhost
+- name: Install hotballoon-shed
+  hosts:
+    localhost
   connection: local
-  become: yes
-  become_user: root
 
   vars:
     repo_url: 'https://github.com/flexiooss/hotballoon-shed.git'
     repo_version: develop
-    install_dir: /home/hotballoon-shed
+    install_dir: "{{ ansible_env.HOME }}/.hotballoon-shed"
+    cmd_invoke: hbshed
 
   tasks:
     - name: Install latest version of "git"
+      become: yes
       apt:
         name: git
         state: latest
 
     - name: Install "python 3.7"
+      become: yes
       apt:
         name: python3.7
         state: present
 
     - name: Install latest version of "nodejs"
+      become: yes
       apt:
         name: nodejs
         state: latest
 
-    - name: Ensure have last hotballoon-shed master version
+    - name: Ensure have last hotballoon-shed master version in "{{install_dir}}"
       git:
         repo: "{{repo_url}}"
         dest: "{{install_dir}}"
@@ -36,18 +39,17 @@
     - name: Activate venv for python3.7
       command: bash "{{install_dir}}"/venv.sh
 
-    - name: Ensure have hshed into /usr/local/bin/
+    - name: Ensure have hbshed into /usr/local/bin/
+      become: yes
       template:
-        src: ./bin/hshed.j2
-        dest: /usr/local/bin/hshed
-        owner: root
-        group: root
+        src: ./bin/hbshed.j2
+        dest: "/usr/local/bin/{{cmd_invoke}}"
         mode: 751
 
     - name: Ensure hotballoon-shed is self-installed
-      command: sudo bash "{{install_dir}}"/hshed.sh self-install
-      register: self_install
+      shell: bash "{{install_dir}}"/hotballoon-shed.sh self-install
+#      register: self_install
 
-    - debug: msg="{{ self_install.stdout }}"
-    - debug: msg="{{ self_install.stderr }}"
+#    - debug: msg="{{ self_install.stdout }}"
+#    - debug: msg="{{ self_install.stderr }}"
 
