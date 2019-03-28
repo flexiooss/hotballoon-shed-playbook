@@ -9,7 +9,8 @@
     repo_url: 'https://github.com/flexiooss/hotballoon-shed.git'
     repo_version: master
     install_dir: "{{ ansible_env.HOME }}/.hotballoon-shed"
-    cmd_invoke: hbshed
+    cmd_invoke: hbshed,
+    NODEJS_VERSION: 10
 
   tasks:
     - name: Install latest version of "git"
@@ -28,6 +29,12 @@
       become: yes
       apt:
         name: nodejs
+        state: present
+
+    - name: Install latest version of "npm"
+      become: yes
+      apt:
+        name: npm
         state: latest
 
     - name: Ensure have last hotballoon-shed master version in "{{install_dir}}"
