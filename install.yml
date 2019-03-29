@@ -9,7 +9,7 @@
     repo_url: 'https://github.com/flexiooss/hotballoon-shed.git'
     repo_version: master
     install_dir: "{{ ansible_env.HOME }}/.hotballoon-shed"
-    cmd_invoke: hbshed,
+    cmd_invoke: hbshed
     NODEJS_VERSION: 10
 
   tasks:
