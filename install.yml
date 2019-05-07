@@ -25,6 +25,12 @@
         name: python3.7
         state: present
 
+    - name: Install "python 3.7 venv"
+      become: yes
+      apt:
+        name: python3.7-venv
+        state: present
+
     - name: Install latest version of "nodejs"
       become: yes
       apt:
@@ -34,7 +40,7 @@
     - name: Install latest version of "npm"
       become: yes
       apt:
-        name: npm
+        name: nodejs-npm
         state: latest
 
     - name: Ensure have last hotballoon-shed master version in "{{install_dir}}"
