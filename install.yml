@@ -10,7 +10,7 @@
     repo_version: master
     install_dir: "{{ ansible_env.HOME }}/.hotballoon-shed"
     cmd_invoke: hbshed
-    NODEJS_VERSION: 10
+    NODEJS_VERSION: 14
 
   tasks:
     - name: Install latest version of "git"
@@ -33,15 +33,11 @@
 
     - name: Install latest version of "nodejs"
       become: yes
-      apt:
-        name: nodejs
+      snap:
+        name: node
+        classic: yes
+        channel: "{{NODEJS_VERSION}}/stable"
         state: present
-
-    - name: Install latest version of "npm"
-      become: yes
-      apt:
-        name: nodejs-npm
-        state: latest
 
     - name: Ensure have last hotballoon-shed master version in "{{install_dir}}"
       git:
